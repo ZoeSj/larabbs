@@ -4,9 +4,17 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Api\VerificationCodeRequest;
 use Overtrue\EasySms\EasySms;
+use Illuminate\Support\Facades\Log;
 
 class VerificationCodesController extends Controller
 {
+    /**
+     * @param VerificationCodeRequest $request
+     * @param EasySms $easySms
+     * @throws \ErrorException
+     * @throws \Overtrue\EasySms\Exceptions\InvalidArgumentException
+     * @throws \Overtrue\EasySms\Exceptions\NoGatewayAvailableException
+     */
     public function store(VerificationCodeRequest $request, EasySms $easySms)
     {
         $phone = $request->phone;
@@ -30,7 +38,6 @@ class VerificationCodesController extends Controller
         $expiredAt = now()->addMinutes(10);
         // 缓存验证码 10分钟过期。
         \Cache::put($key, ['phone' => $phone, 'code' => $code], $expiredAt);
-
         return $this->response->array([
             'key' => $key,
             'expired_at' => $expiredAt->toDateTimeString(),
