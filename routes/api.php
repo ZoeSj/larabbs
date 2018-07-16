@@ -28,6 +28,10 @@ $api->version('v1', [
         //用户注册
         $api->post('users', 'UsersController@store')
             ->name('api.users.store');
+
+        //图片验证码
+        $api->post('captachas','CaptachasController@store')
+            ->name('api.captachas.store');
     });
 
 });
